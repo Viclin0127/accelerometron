@@ -15,7 +15,8 @@ class ParallaxCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // set up our parallax code later
+        // set up our parallax code
+        setupParallax()
     }
 
     func configuredCell(withImage image: UIImage, andDescription desc: String){
@@ -25,7 +26,26 @@ class ParallaxCell: UITableViewCell {
     
     
     func setupParallax() {
+        // 設定移動的上下限
+        let min = CGFloat(-30)
+        let max = CGFloat(30)
         
+        //設定x軸水平橫移
+        let xMotion = UIInterpolatingMotionEffect(keyPath: "layer.transform.translation.x", type: .tiltAlongHorizontalAxis)
+        xMotion.minimumRelativeValue = min
+        xMotion.maximumRelativeValue = max
+        
+        //設定y軸垂直橫移
+        let yMotion = UIInterpolatingMotionEffect(keyPath: "layer.transform.translation.y", type: .tiltAlongVerticalAxis)
+        yMotion.minimumRelativeValue = min
+        yMotion.maximumRelativeValue = max
+        
+        // 將兩種橫移效果 做成一個Group, 方便之後在ImageView一起呼叫
+        let motionEffectGroup = UIMotionEffectGroup()
+        motionEffectGroup.motionEffects = [xMotion, yMotion]
+        
+        itemImageView.addMotionEffect(motionEffectGroup)
+        // 最後須在 awakeFromNib 裡面呼叫這個func
     }
 
 }
